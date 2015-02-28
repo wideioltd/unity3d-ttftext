@@ -1,0 +1,57 @@
+Description :
+
+TTFText allows you to easily create real 3d text meshes inside the Unity Editor.
+<br/><br/>
+
+3D Text meshes may be produced from any vectorial fonts installed on your system. 
+The mesh generation can be parameterized in many ways: extrusion, bevel, texture mappings, text justification, paragraph layouts.<br/>
+Font texts may be emboldened, slanted, and simplified.
+<br/><br/>
+
+You may generate 3D texts either as a single mesh or create individual mesh for each character, word or line of a text. 
+This permits to create fancy 3D text animations as well as to bypass the 65536 vertices per mesh limit with long texts.
+By embedding fonts in your application, you will be allowed to dynamically create new 3d text during runtime on all platforms.
+<br/><br/>
+
+TTFText supports all major vectorial font formats such as TrueType, OpenType and Type 1. 
+It has also successfully been tested with asiatic fonts.
+<br/><br/>
+
+More informations can be found at: <a href="http://ttftext.computerdreams.org/">ttftext.computerdreams.org</a>.
+<br/><br/>
+
+
+Version Changes:
+
+Better Text Layout handling.
+Better font tesselation in embedded font mode.
+Removed Fonts with conflicting licences from the package.
+Keep track and conserve the position of manually moved subobjects between mesh rebuilds.
+Should now handle Copy/Paste of TTFTextMesh correctly.
+Multiple bug fixes.
+
+
+
+Message To reviewer:
+
+Hi,
+
+Here is the updated new submission for TTFText in which
+we think we have answered all your requests.
+
+In particular, all demo scenes should now be
+error free.
+
+As for the font licence problem,
+we removed any fonts from the package that
+are covered by their own restrictive licence.
+We kept just a few free fonts for demonstration purpose.
+They are listed in the file "LICENSE fonts.txt".
+
+We are not lawyer but we think that it won't conflict
+with the Unity EULA licence as the font  licence (in most cases SIL Open font  Licence) specifically allows font
+redistribution for any purpose with little to no restriction.
+
+Thanks,
+Best Regards,
+Olivier Blanc

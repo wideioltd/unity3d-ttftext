@@ -1,0 +1,3 @@
+Triangulation is C# Assembly providing access to triangulation primitives through GLUT.
+This library is part of TTF Text.
+

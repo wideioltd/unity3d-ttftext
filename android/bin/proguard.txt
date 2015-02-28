@@ -1,0 +1,3 @@
+# view AndroidManifest.xml #generated:8
+-keep class com.computerdreams.ttftext.androidsysfont.ACTIVITY_ENTRY_NAME { <init>(...); }
+

@@ -1,0 +1,4 @@
+FTSharp assembly providing access to fonts via FreeType.
+This library is part of TTF Text. It may not be redistributed without prior permission.
+
+
