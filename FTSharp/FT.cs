@@ -18,9 +18,13 @@ using FTUShort = System.UInt16;
 #if NATIVE_ILP64 || NATIVE_LP64
 using FTLong= System.Int64;
 using FTULong=System.UInt64;
+using FTPos = System.Int64;
+
 #else
 using FTLong = System.Int32;
 using FTULong = System.UInt32;
+using FTPos = System.Int32;
+
 #endif
 
 #if NATIVE_ILP64
@@ -31,7 +35,6 @@ using FTInt = System.Int32;
 using FTUInt = System.UInt32;
 #endif
 
-using FTPos = FTLong;
 
 namespace FTSharp
 {
@@ -392,7 +395,7 @@ namespace FTSharp
         public static extern int FT_Glyph_Copy(IntPtr src, out IntPtr dest);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Glyph_Get_CBox(IntPtr glyph, FTUInt bboxmode, out IntPtr cbox);
+        public static extern int FT_Glyph_Get_CBox(IntPtr glyph, FTUInt bboxmode, out FT.FT_BBox cbox);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FT_Outline_Decompose(IntPtr outline, ref FT_Outline_Funcs func_interface, IntPtr user);
