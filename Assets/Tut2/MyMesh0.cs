@@ -14,7 +14,7 @@ public class MyMesh0 : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		renderer.material.SetFloat("_cosalpha",Mathf.Cos(alpha));
-		renderer.material.SetFloat("_sinalpha",Mathf.Sin(alpha));		
+		GetComponent<Renderer>().material.SetFloat("_cosalpha",Mathf.Cos(alpha));
+		GetComponent<Renderer>().material.SetFloat("_sinalpha",Mathf.Sin(alpha));		
 	}
 }

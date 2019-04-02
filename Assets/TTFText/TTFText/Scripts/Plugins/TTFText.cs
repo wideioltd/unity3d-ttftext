@@ -1182,14 +1182,14 @@ public class TTFText : MonoBehaviour
 	
 	public void RebuildAll ()
 	{
-		foreach (TTFText tm in GameObject.FindSceneObjectsOfType(typeof(TTFText))) {			
+		foreach (TTFText tm in FindObjectsOfType(typeof(TTFText))) {			
 			tm.RebuildText ();
 		}
 	}
 	
 	public void RebuildAllRelevent ()
 	{
-		foreach (TTFText tm in GameObject.FindSceneObjectsOfType(typeof(TTFText))) {
+		foreach (TTFText tm in FindObjectsOfType(typeof(TTFText))) {
 			if (tm.Text.Contains (gameObject.name)) {
 				//tm.ResetUsedStyles();
 				tm.RebuildText ();

@@ -157,24 +157,15 @@ public class TTFTextEditor : Editor
 		switch (bt) {
 		case BuildTarget.Android:
 			return RuntimePlatform.Android;
-		case BuildTarget.FlashPlayer:
-			return RuntimePlatform.FlashPlayer;
 		case BuildTarget.StandaloneWindows:
 		case BuildTarget.StandaloneWindows64:
 			return RuntimePlatform.WindowsPlayer;
 		case BuildTarget.StandaloneOSXIntel:
-			return RuntimePlatform.OSXPlayer;
-		case BuildTarget.WebPlayer:
-			return RuntimePlatform.WindowsWebPlayer;						
-		case BuildTarget.iPhone:
+			return RuntimePlatform.OSXPlayer;		
+		case BuildTarget.iOS:
 			return RuntimePlatform.IPhonePlayer;			
-		case BuildTarget.Wii:
-			return RuntimePlatform.WiiPlayer;
 		case BuildTarget.StandaloneLinux:
-			return RuntimePlatform.LinuxPlayer;
-		case BuildTarget.NaCl:
-			return RuntimePlatform.NaCl;
-			
+			return RuntimePlatform.LinuxPlayer;			
 		}
 		return RuntimePlatform.WindowsEditor;
 	}
@@ -495,7 +486,7 @@ public class TTFTextEditor : Editor
 					 
 				}
 			} else {
-				if (go.renderer == null) {
+				if (go.GetComponent<Renderer>() == null) {
 					GUI.color = Color.red;
 					if (!tm.IsStyleObject) {
 						GUILayout.TextArea ("The prefab does not have any renderer\n Be sure to instantiate at least a renderer and at least a meshfilter or a interactivecloth.");

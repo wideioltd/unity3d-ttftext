@@ -40,12 +40,12 @@ public class scene2_particle_emitter : MonoBehaviour {
 			tm.BevelDepth=Random.Range(0f,1f);
 			tm.Text=words[Random.Range(0,words.Length)];
 			tm.Size=Random.Range(0.1f,1.2f);
-			go.rigidbody.velocity=Vector3.back*Random.Range(minspeed,minspeed+speedinterval);
-			go.rigidbody.angularVelocity=new Vector3(Random.Range(-aspeed,aspeed),Random.Range(-aspeed,aspeed),Random.Range(-aspeed,aspeed));
-			go.rigidbody.useGravity=false;
+			go.GetComponent<Rigidbody>().velocity=Vector3.back*Random.Range(minspeed,minspeed+speedinterval);
+			go.GetComponent<Rigidbody>().angularVelocity=new Vector3(Random.Range(-aspeed,aspeed),Random.Range(-aspeed,aspeed),Random.Range(-aspeed,aspeed));
+			go.GetComponent<Rigidbody>().useGravity=false;
 			go.transform.position=new Vector3(Random.Range(-2f,2f),Random.Range(-2f,2f),5);
 			go.transform.parent=transform;
-			go.renderer.material=materials[Random.Range(0,materials.Length)];
+			go.GetComponent<Renderer>().material=materials[Random.Range(0,materials.Length)];
             //tm.runtimeFontPath=FontListManager.Instance.SystemFonts[fonts[Random.Range(0,fonts.Count)]].Path;
             tm.FontId = fonts[Random.Range(0,fonts.Count)];
 		}
@@ -54,8 +54,8 @@ public class scene2_particle_emitter : MonoBehaviour {
 			GameObject go =new GameObject();
 			go.AddComponent<LensFlare>();
 			go.AddComponent<Rigidbody>();
-			go.rigidbody.velocity=Vector3.back*Random.Range(minspeed+speedinterval,minspeed+2*speedinterval);
-			go.rigidbody.useGravity=false;
+			go.GetComponent<Rigidbody>().velocity=Vector3.back*Random.Range(minspeed+speedinterval,minspeed+2*speedinterval);
+			go.GetComponent<Rigidbody>().useGravity=false;
 			go.transform.position=new Vector3(Random.Range(-2f,2f),Random.Range(-2f,2f),5);
 			go.transform.parent=transform;
 			LensFlare lf=go.GetComponent<LensFlare>();

@@ -13,7 +13,7 @@ public class scene2_particle_autodestroy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Camera.main.WorldToScreenPoint(transform.position);
-		if (((Time.time-tstart)>lifetime)||(!renderer.isVisible)) {
+		if (((Time.time-tstart)>lifetime)||(!GetComponent<Renderer>().isVisible)) {
 			GameObject.Destroy(gameObject);
 		}
 	}
