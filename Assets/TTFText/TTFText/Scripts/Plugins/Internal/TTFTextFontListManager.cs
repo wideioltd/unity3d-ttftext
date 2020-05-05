@@ -91,11 +91,6 @@ public class TTFTextFontListManager {
  	FlashPlayer
  	
 			*/
-		if ((Application.platform==RuntimePlatform.OSXEditor)||(Application.platform==RuntimePlatform.OSXPlayer)||(Application.platform==RuntimePlatform.OSXDashboardPlayer)) {			
-			fontPaths.Add("/Library/Fonts");
-			fontPaths.Add("/System/Library/Fonts");
-			fontPaths.Add("/System/Fonts");
-		}
 		if ((Application.platform==RuntimePlatform.WindowsEditor)||(Application.platform==RuntimePlatform.WindowsPlayer)) {
 			DirectoryInfo winDir = Directory.GetParent(System.Environment.GetFolderPath(System.Environment.SpecialFolder.System));
 			fontPaths.Add(winDir.FullName + "/Fonts");
