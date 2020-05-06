@@ -2,6 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+// https://stackoverflow.com/questions/7607502/sizeoflong-in-64-bit-c
+//Type             ILP64   LP64 LLP64
+//char              8      8       8
+//short            16     16      16
+//int              64     32      32
+//long             64     64      32
+//long long        64     64      64
+//pointer          64     64      64
+
+
+using FTShort = System.Int16;
+using FTUShort = System.UInt16;
+
+#if NATIVE_ILP64 || NATIVE_LP64
+using FTLong= System.Int64;
+using FTULong=System.UInt64;
+using FTPos = System.Int64;
+
+#else
+using FTLong = System.Int32;
+using FTULong = System.UInt32;
+using FTPos = System.Int32;
+
+#endif
+
+#if NATIVE_ILP64
+using FTInt=System.Int64;
+using FTUInt=System.UInt64;
+#else
+using FTInt = System.Int32;
+using FTUInt = System.UInt32;
+#endif
+
 
 namespace FTSharp
 {
@@ -24,7 +57,7 @@ namespace FTSharp
         public const int FT_FACE_FLAG_CID_KEYED = (1 << 12);
         public const int FT_FACE_FLAG_TRICKY = (1 << 13);
 
-        public const int FT_KERNING_DEFAULT  = 0;
+        public const int FT_KERNING_DEFAULT = 0;
         public const int FT_KERNING_UNFITTED = 1;
         public const int FT_KERNING_UNSCALED = 2;
 
@@ -62,23 +95,26 @@ namespace FTSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate int OutlineCubicToFunc(IntPtr c1, IntPtr c2, IntPtr to, IntPtr data);
 
-        #region "Data Structures"
+#region "Data Structures"
 
         // Data Structures
+
         [StructLayout(LayoutKind.Sequential)]
         public struct FT_Vector
         {
-            public int x;
-            public int y;
+            // long in C
+            public FTLong x;
+            public FTLong y;
         }
 
+        // ftimage.h
         [StructLayout(LayoutKind.Sequential)]
         public struct FT_BBox
         {
-            public int xMin;
-            public int yMin;
-            public int xMax;
-            public int yMax;
+            public FTLong xMin;
+            public FTLong yMin;
+            public FTLong xMax;
+            public FTLong yMax;
         }
 
 
@@ -92,13 +128,13 @@ namespace FTSharp
         [StructLayout(LayoutKind.Sequential)]
         public struct FT_FaceRec
         {
-            public int num_faces;
-            public int face_index;
+            public FTLong num_faces;
+            public FTLong face_index;
 
-            public int face_flags;
-            public int style_flags;
+            public FTLong face_flags;
+            public FTLong style_flags;
 
-            public int num_glyphs;
+            public FTLong num_glyphs;
 
 
             public string family_name;
@@ -109,10 +145,10 @@ namespace FTSharp
             public IntPtr style_name;
             */
 
-            public int num_fixed_sizes;
+            public FTInt num_fixed_sizes;
             public IntPtr available_sizes;
 
-            public int num_charmaps;
+            public FTInt num_charmaps;
             public IntPtr charmaps;
 
             public FT_Generic generic;
@@ -124,16 +160,16 @@ namespace FTSharp
 
             public FT_BBox bbox;
 
-            public ushort units_per_EM;
-            public short ascender;
-            public short descender;
-            public short height;
+            public FTUShort units_per_EM;
+            public FTShort ascender;
+            public FTShort descender;
+            public FTShort height;
 
-            public short max_advance_width;
-            public short max_advance_height;
+            public FTShort max_advance_width;
+            public FTShort max_advance_height;
 
-            public short underline_position;
-            public short underline_thickness;
+            public FTShort underline_position;
+            public FTShort underline_thickness;
 
             public IntPtr glyph;
 
@@ -161,28 +197,28 @@ namespace FTSharp
         [StructLayout(LayoutKind.Sequential)]
         public struct FT_Glyph_Metrics
         {
-            public int width;
-            public int height;
+            public FTPos width;
+            public FTPos height;
 
-            public int horiBearingX;
-            public int horiBearingY;
-            public int horiAdvance;
+            public FTPos horiBearingX;
+            public FTPos horiBearingY;
+            public FTPos horiAdvance;
 
-            public int vertBearingX;
-            public int vertBearingY;
-            public int vertAdvance;
+            public FTPos vertBearingX;
+            public FTPos vertBearingY;
+            public FTPos vertAdvance;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct FT_Bitmap
         {
-            public int rows;
-            public int width;
-            public int pitch;
+            public FTUInt rows;
+            public FTUInt width;
+            public FTInt pitch;
             public IntPtr buffer;
-            public short num_grays;
-            public char pixel_mode;
-            public char palette_mode;
+            public FTShort num_grays;
+            public System.Byte pixel_mode;
+            public System.Byte palette_mode;
             public IntPtr palette;
         }
 
@@ -192,27 +228,27 @@ namespace FTSharp
             public IntPtr library;
             public IntPtr face;
             public IntPtr next;
-            public uint reserved;       /* retained for binary compatibility */
+            public FTUInt reserved;       /* retained for binary compatibility */
             public FT_Generic generic;
 
             public FT_Glyph_Metrics metrics;
-            public int linearHoriAdvance;
-            public int linearVertAdvance;
+            public FTLong linearHoriAdvance;
+            public FTLong linearVertAdvance;
             public FT_Vector advance;
 
-            public int format;
+            public FTULong format; // glyph format
 
             public FT_Bitmap bitmap;
-            public int bitmap_left;
-            public int bitmap_top;
+            public FTInt bitmap_left;
+            public FTInt bitmap_top;
 
             public FT_Outline outline;
 
-            public uint num_subglyphs;
+            public FTUInt num_subglyphs;
             public IntPtr subglyphs;
 
             public IntPtr control_data;
-            long control_len;
+            FTLong control_len;
 
             public int lsb_delta;
             public int rsb_delta;
@@ -226,26 +262,28 @@ namespace FTSharp
         [StructLayout(LayoutKind.Sequential)]
         public struct FT_OutlineGlyphRec
         {
+            // previous is in a structure
             public IntPtr library;
             public IntPtr clazz;
-            public int format;
+            public FTULong format;
             public FT_Vector advance;
+            // 
             public FT_Outline outline;
         }
 
-        public const int OUTLINE_OFFSET = 20;
+        public static int OUTLINE_OFFSET = 0; // used to be 20..
 
         [StructLayout(LayoutKind.Sequential)]
         public struct FT_Outline
         {
-            public short n_contours;      /* number of contours in glyph        */
-            public short n_points;        /* number of points in the glyph      */
+            public FTShort n_contours;      /* number of contours in glyph        */
+            public FTShort n_points;        /* number of points in the glyph      */
 
             public IntPtr points;          /* the outline's points               */
             public IntPtr tags;            /* the points flags                   */
             public IntPtr contours;        /* the contour end points             */
 
-            public int flags;           /* outline masks                      */
+            public FTInt flags;           /* outline masks                      */
 
         }
 
@@ -262,7 +300,7 @@ namespace FTSharp
         }
 
 
-        #endregion
+#endregion
 
         // Helper functions
 
@@ -321,29 +359,29 @@ namespace FTSharp
         public static extern int FT_Done_FreeType(IntPtr library);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_New_Face(IntPtr library, string fname, int index, out IntPtr face);
+        public static extern int FT_New_Face(IntPtr library, string fname, FTLong index, out IntPtr face);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FT_Done_Face(IntPtr face);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Set_Char_Size(IntPtr face, int charwidth, int charheight, int horzres, int vertres);
+        public static extern int FT_Set_Char_Size(IntPtr face, FTLong charwidth, FTLong charheight, FTUInt horzres, FTUInt vertres);
 
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Set_Pixel_Size(IntPtr face, int width, int height);
+        public static extern int FT_Set_Pixel_Size(IntPtr face, FTUInt width, FTUInt height);
 
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Get_Char_Index(IntPtr face, int code);
+        public static extern int FT_Get_Char_Index(IntPtr face, FTULong code);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Load_Glyph(IntPtr face, int index, int flags);
+        public static extern int FT_Load_Glyph(IntPtr face, FTUInt index, System.Int32 flags);
 
 
         // same as getcharindex + loadglyph
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Load_Char(IntPtr face, uint char_code, int load_flags);
+        public static extern int FT_Load_Char(IntPtr face, FTULong char_code, System.Int32 load_flags);
 
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -357,35 +395,38 @@ namespace FTSharp
         public static extern int FT_Glyph_Copy(IntPtr src, out IntPtr dest);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Glyph_Get_CBox(IntPtr glyph, int bboxmode, out IntPtr cbox);
+        public static extern int FT_Glyph_Get_CBox(IntPtr glyph, FTUInt bboxmode, out FT.FT_BBox cbox);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FT_Outline_Decompose(IntPtr outline, ref FT_Outline_Funcs func_interface, IntPtr user);
         
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Outline_Embolden(IntPtr outline, int strength);
-        
-        [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void FT_Glyph_Get_CBox(IntPtr glyph, int bbox_mode, out FT_BBox obbox);
+        public static extern int FT_Outline_Embolden(IntPtr outline, FTPos strength);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void FT_Get_Kerning(IntPtr face, int left, int right, int kernmode, out FT_Vector kerning);
+        public static extern void FT_Get_Kerning(IntPtr face, FTUInt left, FTUInt right, FTUInt kernmode, out FT_Vector kerning);
 
-       
-
-
-        // Additional native Freetype helper functions
-        //[DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern IntPtr fthelper_glyph_get_outline_address(IntPtr glyph);
 
         // .Net implementation
         public static IntPtr fthelper_glyph_get_outline_address(IntPtr glyph)
         {
+            if (OUTLINE_OFFSET == 0)
+            {
+                FieldOffsetAttribute fieldOffset =
+                    (FieldOffsetAttribute)typeof(FT_GlyphSlotRec)
+                    .GetField("outline")
+                    .GetCustomAttributes(
+                        typeof(FieldOffsetAttribute),
+                        true
+                    )[0];
+                OUTLINE_OFFSET = fieldOffset.Value;
+            }
+
             return new IntPtr(glyph.ToInt32() + OUTLINE_OFFSET);
         }
 
 
-        #region "Error Handling"
+#region "Error Handling"
 
         static Dictionary<int, string> errorStrings;
 
@@ -513,8 +554,7 @@ namespace FTSharp
             }
         }
 
-        #endregion
+#endregion
 
     }
 }
-
