@@ -383,7 +383,6 @@ public class TTFTextOutline : System.Object
 	// Construct from a TTF.Outline	
 	
 	public TTFTextOutline(TTF.Outline ttfoutline, TTF.Outline.Point adv, bool reversed) {
-		
 		min = new Vector3(float.PositiveInfinity,float.PositiveInfinity,float.PositiveInfinity);
 		max = new Vector3(float.NegativeInfinity,float.NegativeInfinity,float.NegativeInfinity);
 		size = Vector3.zero;

@@ -107,15 +107,15 @@ namespace FTSharp
         }
 
 
-        public void Decompose(IntPtr glyph)
+        public void Decompose(FT.FT_GlyphSlotRec slot)
         {
             init_funcs();
             decomposer_funcs.delta = 0;
             decomposer_funcs.shift = 0;
 
-            IntPtr outline = FT.fthelper_glyph_get_outline_address(glyph);
+            // IntPtr outline = FT.fthelper_glyph_get_outline_address(glyph);
 
-            int code = FT.FT_Outline_Decompose(outline, ref decomposer_funcs, IntPtr.Zero);
+            int code = FT.FT_Outline_Decompose(slot.outline, ref decomposer_funcs, IntPtr.Zero);
             FT.CheckError(code);
         }
     }

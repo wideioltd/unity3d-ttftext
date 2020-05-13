@@ -711,7 +711,9 @@ namespace TTFTextInternal
 						if (t.is_script) {
 							otext = ll.line;
 							EvalEasyMarkUp (tm, t.text, ref ll);
-							d = ll.GetDefaultLineWidth (ll.hspacing); // TODO: <- THIS IS WRONG !			
+							d = ll.GetDefaultLineWidth (ll.hspacing); // TODO: <- THIS IS WRONG !
+							Debug.Log("hspacing: " + ll.hspacing);
+							Debug.Log("LineWidth: " + d);
 							if (d > (ll.linewidth - firstlineoffset)) {
 								ll.RewindLine (otext);
 								FinalizeLL (ref ll, firstlineoffset);								
@@ -1095,9 +1097,9 @@ namespace TTFTextInternal
 			case TTFText.LayoutModeEnum.Wrap:
 #if TTFTEXT_LITE
 			if (tm.DemoMode) {
-#endif				
-			
-				foreach (TTFTextInternal.LineLayout ll in WrapParagraphsSimple(text, tm)) {
+#endif
+
+					foreach (TTFTextInternal.LineLayout ll in WrapParagraphsSimple(text, tm)) {
 					yield return ll;
 				}
 #if TTFTEXT_LITE
@@ -1461,12 +1463,12 @@ namespace TTFTextInternal
 					advance = Vector3.zero;
 					return mesh;
 				}
-			
-			
+
+				// Debug.Log(outlines[0].Size);
 				//if (ts.OutlineEmbold >= 0) {
 				//	outlines = OutlineOutlines(outlines, ts.OutlineEmbold);
 				//}
-			
+
 				mask = outlines [0].SimplifyMask (ts.SimplifyAmount, tm.Size);
 		
 				// front
@@ -1489,7 +1491,7 @@ namespace TTFTextInternal
 				} else {
 					Utilities.ReverseTriangles (back);
 				}
-			
+				
 				TTFTextInternalMeshGenerators.ExtrudeOutlines (ref mesh, front, back, outlines, mask);
 			
 				Utilities.DestroyObj (front);
@@ -1817,15 +1819,17 @@ namespace TTFTextInternal
 			foreach (char c in txt) {
 				TTFTextOutline o = null;
 					
-				if (charstyleidx != null) {
+				if (charstyleidx != null)
+				{
 					if ((cfont == null) 
-						|| (currentfontid != tm.UsedStyles [charstyleidx [i]].GetFontEngineFontId (tm.UsedStyles [charstyleidx [i]].PreferredEngine (Application.platform)))) {
+						|| (currentfontid != tm.UsedStyles [charstyleidx [i]].GetFontEngineFontId (tm.UsedStyles [charstyleidx [i]].PreferredEngine (Application.platform))))
+					{
 						cttfstyle = tm.UsedStyles [charstyleidx [i]];			
 						fp = cttfstyle.PreferredEngine (Application.platform);
 						//Debug.Log(fp);
 #if ! TTFTEXT_LITE				
 						cfont = cttfstyle.GetFont (ref fp, ref currentfontid, ref parameters);
-#else 
+#else
 				fp=0; 
 				currentfontid=cttfstyle.FontId;
 				parameters=cttfstyle.GetFontEngineParameters(0);
@@ -1835,8 +1839,8 @@ namespace TTFTextInternal
 							parameters=cttfstyle.GetFontEngineParameters(0);
 				}
 				cfont= TTFTextInternal.TTFTextFontEngine.font_engines[0].GetFont(parameters,currentfontid);
-#endif				
-			
+#endif
+
 						if (cfont == null) {
 							throw new System.Exception ("Font not found :" + tm.InitTextStyle.FontId);
 						}
@@ -1849,8 +1853,7 @@ namespace TTFTextInternal
 				if ((charmetadata == null) || (charmetadata [i] == null)) {
 					// a normal character
 					
-					
-					if (TTFTextFontEngine.font_engines [fp].IsBitmapFontProvider (parameters)) {	
+					if (TTFTextFontEngine.font_engines [fp].IsBitmapFontProvider (parameters)) {
 						TTFTextTexturePortion p = TTFTextFontEngine.font_engines [fp].GetGlyphBitmap (parameters, cfont, c);     
 						o = new TTFTextOutline ();
 						float w = ((float)p.w);
@@ -1874,7 +1877,10 @@ namespace TTFTextInternal
 						charmetadata [i] = tel;						
 					} else {
 						o = TTFTextFontEngine.font_engines [fp].GetGlyphOutline (parameters, cfont, c);                    
-										
+						for (int ii = 0; ii < o.points.Count; ii++)
+						{
+							Debug.Log(o.points[ii]);
+						}
 						if (charstyleidx != null) {					
 							for (int ii=0; ii<tm.UsedStyles[charstyleidx[i]].GetOutlineEffectStackElementLength(); ii++) {
 								TTFTextStyle.TTFTextOutlineEffectStackElement tse = tm.InitTextStyle.GetOutlineEffectStackElement (ii);
@@ -1887,7 +1893,8 @@ namespace TTFTextInternal
 							}
 						}
 					}
-				} else {
+				} else
+				{
 					// it is some kind of special object (an embedded image... ?)
 					//Debug.Log("Not yet implemented");
 					o = new TTFTextOutline ();
@@ -1896,8 +1903,6 @@ namespace TTFTextInternal
 					Vector3[] quad = {Vector3.zero,Vector3.right * w,new Vector3 (w, h, 0),Vector3.up * h};
 					o.AddBoundary (quad);
 				}
-			
-			
 				
 				o = o.Embolden (((charstyleidx != null) ? tm.UsedStyles [charstyleidx [i]].Embold : tm.Embold) + embold);
 				o.Rescale ((charstyleidx != null) ? tm.UsedStyles [charstyleidx [i]].Size : tm.Size);

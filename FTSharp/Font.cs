@@ -200,7 +200,7 @@ namespace FTSharp
 
             // Get glyph outline in gptr
             IntPtr gptr;
-            code = FT.FT_Get_Glyph(slot, out gptr);
+            code = FT.FT_Get_Glyph(slotrec, out gptr);
             FT.CheckError(code);
 
 
@@ -208,8 +208,8 @@ namespace FTSharp
             if (embold != 0)
             {
                 // Console.WriteLine("EMBOLD=" + embold);
-                IntPtr optr = FT.fthelper_glyph_get_outline_address(gptr);
-                FT.FT_Outline_Embolden(optr, (int)(embold * 64 * 100)); // convert to 26.6 fractional format 
+                // IntPtr optr = FT.fthelper_glyph_get_outline_address(slot);
+                FT.FT_Outline_Embolden(slotrec.outline, (int)(embold * 64 * 100)); // convert to 26.6 fractional format 
             }
 
             // Decompose outline
@@ -217,11 +217,11 @@ namespace FTSharp
 
             if (flatten)
             {
-                outline = Outline.FlattenGlyph(gptr, vectorScale_, isteps);
+                outline = Outline.FlattenGlyph(slotrec, vectorScale_, isteps);
             }
             else
             {
-                outline = Outline.DecomposeGlyph(gptr, vectorScale_, isteps);
+                outline = Outline.DecomposeGlyph(slotrec, vectorScale_, isteps);
             }
 
             FT.FT_Done_Glyph(gptr);
@@ -508,7 +508,7 @@ namespace FTSharp
 
             // get glyph in gptr
             IntPtr gptr;
-            code = FT.FT_Get_Glyph(slot, out gptr);
+            code = FT.FT_Get_Glyph(slotrec, out gptr);
             FT.CheckError(code);
 
             FT.FT_BBox ft_bbox;
@@ -592,7 +592,6 @@ namespace FTSharp
         }
 
 
-#if WITH_UNITY
         public unsafe UnityEngine.Texture2D RenderIntoTexture(char c) {
             int code;
 	    
@@ -605,7 +604,7 @@ namespace FTSharp
             FT.FT_GlyphSlotRec slotrec = FT.HandleToRecord<FT.FT_GlyphSlotRec>(slot);
             FTSharp.FT.FT_Bitmap  ftbm=slotrec.bitmap;    
             
-	    UnityEngine.Texture2D texbuffer=new UnityEngine.Texture2D(ftbm.width,ftbm.rows,UnityEngine.TextureFormat.ARGB32,false);
+	    UnityEngine.Texture2D texbuffer=new UnityEngine.Texture2D((int)ftbm.width, (int)ftbm.rows,UnityEngine.TextureFormat.ARGB32,false);
 	    if (((int)ftbm.pixel_mode)!=2) {
 			UnityEngine.Debug.LogError("Unsupported bitmap depth :"+((int)ftbm.pixel_mode).ToString());
 			return null;
@@ -621,7 +620,7 @@ namespace FTSharp
 		
 	  // UNSAFE DOES NOT WORK IN THE WEB PLAYER !
 	    for (int y=0;y<ftbm.rows;y++) {		      
-			int j=(((ftbm.rows-(1+y))*ftbm.pitch));
+			long j=(((ftbm.rows-(1+y))*ftbm.pitch));
 			byte * bo=((byte *)ftbm.buffer);
 			for (int x=0;x<ftbm.width;x++) {
 			  clrs[i].a=clrs[i].r=clrs[i].g=clrs[i].b=(bo[j+x]);
@@ -632,8 +631,6 @@ namespace FTSharp
 	    texbuffer.Apply();
 	    return texbuffer;
 	}
-	
-#endif
 
     }
 }

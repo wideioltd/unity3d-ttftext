@@ -1,0 +1,5 @@
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\bin\Release\ttftext_3p_freetype_cs.dll
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\obj\Release\ttftext_3p_freetype_cs.dll
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\bin\Release\UnityEngine.dll
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\obj\Release\FTSharp.csproj.CopyComplete
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\obj\Release\FTSharp.csprojAssemblyReference.cache

@@ -199,7 +199,7 @@ public class TTFTextFontListManager {
 		
         try {
 
-            return  new TTF.Font(fontInfo.Path, size,res);
+            return  new TTF.Font(fontInfo.Path, size, (uint)res);
 
         } catch (System.Exception ex) {
             Debug.LogError("(TTFText) Unexpected error with font '" + fontId + "':" + ex.ToString());

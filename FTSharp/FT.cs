@@ -383,10 +383,11 @@ namespace FTSharp
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int FT_Load_Char(IntPtr face, FTULong char_code, System.Int32 load_flags);
 
-
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Get_Glyph(IntPtr slot, out IntPtr glyph);
+        public static extern int FT_Get_Glyph(FT.FT_GlyphSlotRec slot, out IntPtr glyph);
 
+        // [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
+        // public static extern int FT_Get_Glyph_And_Outline(IntPtr slot, out IntPtr aglyph, out IntPtr outline);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void FT_Done_Glyph(IntPtr glyph);
@@ -398,10 +399,10 @@ namespace FTSharp
         public static extern int FT_Glyph_Get_CBox(IntPtr glyph, FTUInt bboxmode, out FT.FT_BBox cbox);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Outline_Decompose(IntPtr outline, ref FT_Outline_Funcs func_interface, IntPtr user);
+        public static extern int FT_Outline_Decompose(FT_Outline outline, ref FT_Outline_Funcs func_interface, IntPtr user);
         
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FT_Outline_Embolden(IntPtr outline, FTPos strength);
+        public static extern int FT_Outline_Embolden(FT_Outline outline, FTPos strength);
 
         [DllImport(FT_DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void FT_Get_Kerning(IntPtr face, FTUInt left, FTUInt right, FTUInt kernmode, out FT_Vector kerning);
