@@ -18,7 +18,7 @@ public class P_RotateMaterial : MonoBehaviour {
 	  }
 		
 	  TTFSubtext tm=GetComponent<TTFSubtext>();
-	  Material [] sm=renderer.sharedMaterials;
+	  Material [] sm=GetComponent<Renderer>().sharedMaterials;
 	  
 	  for (int c=0;c<sm.Length;c++) {
 		if (!randomized) {
@@ -30,7 +30,7 @@ public class P_RotateMaterial : MonoBehaviour {
 			sm[c]=materials[Random.Range(0,materials.Length)];				
 		}
 	  }
-	  renderer.sharedMaterials=sm;	
+	  GetComponent<Renderer>().sharedMaterials=sm;	
 	}
 	
 }

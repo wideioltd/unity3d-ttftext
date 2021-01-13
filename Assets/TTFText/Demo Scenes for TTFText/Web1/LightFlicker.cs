@@ -14,6 +14,6 @@ public class LightFlicker : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-			light.intensity=Mathf.Max(0,Mathf.Sin(((offset+Time.time)/frequency*2*Mathf.PI))/2+percentOn)*100;
+			GetComponent<Light>().intensity=Mathf.Max(0,Mathf.Sin(((offset+Time.time)/frequency*2*Mathf.PI))/2+percentOn)*100;
 	}
 }

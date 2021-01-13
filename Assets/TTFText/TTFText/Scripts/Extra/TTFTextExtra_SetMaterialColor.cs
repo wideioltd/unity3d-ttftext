@@ -16,10 +16,10 @@ public class TTFTextExtra_SetMaterialColor : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		if ((renderer!=null)&&(renderer.sharedMaterial!=null)) {
-		  savedMat=renderer.sharedMaterial;	
-	   	  color=renderer.sharedMaterial.color;
-		  renderer.material=newMat=new Material(savedMat);
+		if ((GetComponent<Renderer>()!=null)&&(GetComponent<Renderer>().sharedMaterial!=null)) {
+		  savedMat=GetComponent<Renderer>().sharedMaterial;	
+	   	  color=GetComponent<Renderer>().sharedMaterial.color;
+		  GetComponent<Renderer>().material=newMat=new Material(savedMat);
 		  newMat.color=color;
 		}
 	}

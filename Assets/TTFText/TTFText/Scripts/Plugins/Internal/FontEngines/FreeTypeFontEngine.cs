@@ -158,7 +158,7 @@ public class FreeTypeFontEngine : IFontEngine {
 			return new TTFTextTexturePortion(d,0,0,1,1,bb.xMax-bb.xMin,bb.yMax-bb.yMin,bb.xMin,bb.yMin,true);		
 			}
 			catch (System.Exception e) {
-				Debug.Log(e);
+			Debug.Log(e);
 				Texture2D t = new Texture2D(1,1,TextureFormat.ARGB32,false);
 				return new TTFTextTexturePortion((Texture)t,0,0,1,1,0,0,0,0,true);		
 			}
@@ -188,10 +188,10 @@ public class FreeTypeFontEngine : IFontEngine {
 	
 	
 	public Vector3 GetAdvance(object parameters,object font, char c) {
-#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX|| UNITY_EDITOR			
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX|| UNITY_EDITOR || TRUE
 		FTSharp.Font fnt=((Font) font).font;
 		FTSharp.Outline.Point adv;
-		// TODO: EXPORT SYMBOL TO GET ONLY ADV
+			// TODO: EXPORT SYMBOL TO GET ONLY ADV
 		fnt.GetGlyphOutline(c,out adv);
 		return new Vector3(adv.X,adv.Y,0);
 #else

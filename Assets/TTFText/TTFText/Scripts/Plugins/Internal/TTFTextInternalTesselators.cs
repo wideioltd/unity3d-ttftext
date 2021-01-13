@@ -633,7 +633,7 @@ public static class Tesselators {
 		outMesh.triangles = triangles.ToArray();
 		outMesh.RecalculateBounds();
 		outMesh.RecalculateNormals();
-		outMesh.Optimize();
+		;
 		
 		return outMesh;
 	}

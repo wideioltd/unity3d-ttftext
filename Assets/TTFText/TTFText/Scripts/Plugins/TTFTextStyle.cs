@@ -732,9 +732,9 @@ public class TTFTextStyle : System.Object
 		get {
 			if (materialSource == null)
 				return null;
-			if (materialSource.renderer == null)
+			if (materialSource.GetComponent<Renderer>() == null)
 				return null;
-			return materialSource.renderer.sharedMaterials;
+			return materialSource.GetComponent<Renderer>().sharedMaterials;
 		}
 	}
 	

@@ -26,8 +26,8 @@ public class MobileTest01 : MonoBehaviour {
 		textobject.AddComponent<MeshFilter>();		
 		textobject.AddComponent<MeshRenderer>();		
 		textobject.AddComponent<TTFText>();		
-		textobject.renderer.material=new Material(Shader.Find("Diffuse"));
-		textobject.renderer.material.color=Color.red;	
+		textobject.GetComponent<Renderer>().material=new Material(Shader.Find("Diffuse"));
+		textobject.GetComponent<Renderer>().material.color=Color.red;	
 		
 		text=textobject.GetComponent<TTFText>();
 		text.TokenMode=TTFText.TokenModeEnum.Character;

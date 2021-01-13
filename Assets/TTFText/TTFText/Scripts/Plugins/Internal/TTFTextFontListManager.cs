@@ -91,11 +91,6 @@ public class TTFTextFontListManager {
  	FlashPlayer
  	
 			*/
-		if ((Application.platform==RuntimePlatform.OSXEditor)||(Application.platform==RuntimePlatform.OSXPlayer)||(Application.platform==RuntimePlatform.OSXDashboardPlayer)) {			
-			fontPaths.Add("/Library/Fonts");
-			fontPaths.Add("/System/Library/Fonts");
-			fontPaths.Add("/System/Fonts");
-		}
 		if ((Application.platform==RuntimePlatform.WindowsEditor)||(Application.platform==RuntimePlatform.WindowsPlayer)) {
 			DirectoryInfo winDir = Directory.GetParent(System.Environment.GetFolderPath(System.Environment.SpecialFolder.System));
 			fontPaths.Add(winDir.FullName + "/Fonts");
@@ -204,7 +199,7 @@ public class TTFTextFontListManager {
 		
         try {
 
-            return  new TTF.Font(fontInfo.Path, size,res);
+            return  new TTF.Font(fontInfo.Path, size, (uint)res);
 
         } catch (System.Exception ex) {
             Debug.LogError("(TTFText) Unexpected error with font '" + fontId + "':" + ex.ToString());

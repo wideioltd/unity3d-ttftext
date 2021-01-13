@@ -1,0 +1,5 @@
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\obj\Debug\FTSharp.csprojAssemblyReference.cache
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\bin\Debug\FTSharp.dll
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\bin\Debug\FTSharp.pdb
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\obj\Debug\FTSharp.dll
+D:\workplace\work\font_generator\unity3d_new_version\FTSharp\obj\Debug\FTSharp.pdb

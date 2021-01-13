@@ -56,10 +56,10 @@ public class Web01Main : MonoBehaviour {
 		GUI.color=( ct=="J" )?Color.magenta:Color.red;
 		if (GUILayout.Button("Junction")) { 
 			ct="J";
-			tm.gameObject.renderer.enabled=false;
+			tm.gameObject.GetComponent<Renderer>().enabled=false;
 			tm.transform.position=bp+Vector3.forward*100;
 			tm=GameObject.Find("/Text "+ct).GetComponent<TTFText>();
-			tm.gameObject.renderer.enabled=true;
+			tm.gameObject.GetComponent<Renderer>().enabled=true;
 			tm.transform.position=bp;
 			tm.Slant=0;tm.Slant=1;tm.Slant=0;
 			
@@ -67,10 +67,10 @@ public class Web01Main : MonoBehaviour {
 		GUI.color=( ct=="B" )?Color.magenta:Color.red;
 		if (GUILayout.Button("Talie")) { 
 			ct="B";
-			tm.gameObject.renderer.enabled=false;
+			tm.gameObject.GetComponent<Renderer>().enabled=false;
 			tm.transform.position=bp+Vector3.forward*100;
 			tm=GameObject.Find("/Text "+ct).GetComponent<TTFText>();
-			tm.gameObject.renderer.enabled=true;
+			tm.gameObject.GetComponent<Renderer>().enabled=true;
 			tm.transform.position=bp;
 			tm.Slant=0;tm.Slant=1;tm.Slant=0;
 	        tm.ExtrusionMode=TTFText.ExtrusionModeEnum.Simple;
@@ -80,20 +80,20 @@ public class Web01Main : MonoBehaviour {
 		GUI.color=( ct=="LC" )?Color.magenta:Color.red;
 		if (GUILayout.Button("Strato")) { 
 			ct="LC";
-			tm.gameObject.renderer.enabled=false;
+			tm.gameObject.GetComponent<Renderer>().enabled=false;
 			tm.transform.position=bp+Vector3.forward*100;
 			tm=GameObject.Find("/Text "+ct).GetComponent<TTFText>();
-			tm.gameObject.renderer.enabled=true;
+			tm.gameObject.GetComponent<Renderer>().enabled=true;
 			tm.transform.position=bp;
 			tm.Slant=0;tm.Slant=1;tm.Slant=0;
 		}	
 		GUI.color=( ct=="LCDP" )?Color.magenta:Color.red;
 		if (GUILayout.Button("Dots")) { 
 			ct="LCDP";
-			tm.gameObject.renderer.enabled=false;
+			tm.gameObject.GetComponent<Renderer>().enabled=false;
 			tm.transform.position=bp+Vector3.forward*100;
 			tm=GameObject.Find("/Text "+ct).GetComponent<TTFText>();
-			tm.gameObject.renderer.enabled=true;
+			tm.gameObject.GetComponent<Renderer>().enabled=true;
 			tm.transform.position=bp;
 			tm.Slant=0;tm.Slant=1;tm.Slant=0;
 	        tm.ExtrusionMode=TTFText.ExtrusionModeEnum.Simple;

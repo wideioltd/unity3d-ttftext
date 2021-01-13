@@ -22,7 +22,7 @@ public class Web02Main : MonoBehaviour {
 		bp=tm.transform.position;
 		tmb.transform.position=bp+Vector3.forward*100;		
 		tmlc.transform.position=bp+Vector3.forward*100;
-		foreach (Transform t in tm.transform) { t.renderer.enabled=showMeshes;}
+		foreach (Transform t in tm.transform) { t.GetComponent<Renderer>().enabled=showMeshes;}
 	}
 	
 	// Update is called once per frame
@@ -38,7 +38,7 @@ public class Web02Main : MonoBehaviour {
 			"This is a TTF Text demo.");		
 		
 		GUI.color=Color.red;
-		foreach (Transform t in tm.transform) { t.renderer.enabled=showMeshes;}
+		foreach (Transform t in tm.transform) { t.GetComponent<Renderer>().enabled=showMeshes;}
 		
 		
 		GUILayout.BeginArea(new Rect(20,20,Screen.width/2.5f-40,Screen.height));	
@@ -56,12 +56,12 @@ public class Web02Main : MonoBehaviour {
 		GUI.color=( showMeshes )?Color.magenta:Color.red;
 		if (GUILayout.Button("Yes")) { 
 			showMeshes=true;
-			foreach (Transform t in tm.transform) { t.renderer.enabled=showMeshes;}
+			foreach (Transform t in tm.transform) { t.GetComponent<Renderer>().enabled=showMeshes;}
 		}
 		GUI.color=( !showMeshes )?Color.magenta:Color.red;
 		if (GUILayout.Button("No")) { 
 			showMeshes=false;
-			foreach (Transform t in tm.transform) { t.renderer.enabled=showMeshes;}
+			foreach (Transform t in tm.transform) { t.GetComponent<Renderer>().enabled=showMeshes;}
 		}
 		GUILayout.EndHorizontal();
 		
@@ -71,37 +71,37 @@ public class Web02Main : MonoBehaviour {
 		GUI.color=( ct=="J" )?Color.magenta:Color.red;
 		if (GUILayout.Button("Junction")) { 
 			ct="J";
-			tm.gameObject.renderer.enabled=false;
+			tm.gameObject.GetComponent<Renderer>().enabled=false;
 			tm.transform.position=bp+Vector3.forward*100;
 			tm=GameObject.Find("/Text "+ct).GetComponent<TTFText>();
-			tm.gameObject.renderer.enabled=true;
+			tm.gameObject.GetComponent<Renderer>().enabled=true;
 			tm.transform.position=bp;
 			tm.Slant=0;tm.Slant=1;tm.Slant=0;
-			foreach (Transform t in tm.transform) { t.renderer.enabled=showMeshes;}
+			foreach (Transform t in tm.transform) { t.GetComponent<Renderer>().enabled=showMeshes;}
 		}	
 		GUI.color=( ct=="B" )?Color.magenta:Color.red;
 		if (GUILayout.Button("Talie")) { 
 			ct="B";
-			tm.gameObject.renderer.enabled=false;
+			tm.gameObject.GetComponent<Renderer>().enabled=false;
 			tm.transform.position=bp+Vector3.forward*100;
 			tm=GameObject.Find("/Text "+ct).GetComponent<TTFText>();
-			tm.gameObject.renderer.enabled=true;
+			tm.gameObject.GetComponent<Renderer>().enabled=true;
 			tm.transform.position=bp;
 			tm.Slant=0;tm.Slant=1;tm.Slant=0;
 			tm.ExtrusionDepth=0;tm.ExtrusionDepth=1;			
-			foreach (Transform t in tm.transform) { t.renderer.enabled=showMeshes;}
+			foreach (Transform t in tm.transform) { t.GetComponent<Renderer>().enabled=showMeshes;}
 		}	
 		
 		GUI.color=( ct=="LC" )?Color.magenta:Color.red;
 		if (GUILayout.Button("Strato")) { 
 			ct="LC";
-			tm.gameObject.renderer.enabled=false;
+			tm.gameObject.GetComponent<Renderer>().enabled=false;
 			tm.transform.position=bp+Vector3.forward*100;
 			tm=GameObject.Find("/Text "+ct).GetComponent<TTFText>();
-			tm.gameObject.renderer.enabled=true;
+			tm.gameObject.GetComponent<Renderer>().enabled=true;
 			tm.transform.position=bp;
 			tm.Slant=0;tm.Slant=1;tm.Slant=0;
-			foreach (Transform t in tm.transform) { t.renderer.enabled=showMeshes;}
+			foreach (Transform t in tm.transform) { t.GetComponent<Renderer>().enabled=showMeshes;}
 		}	
 
 		GUILayout.EndHorizontal();

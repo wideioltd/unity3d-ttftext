@@ -25,9 +25,9 @@ public class LetterPrefabAnimateHalo : MonoBehaviour {
 		sz2=o.GetSize()/2;
 		if (b!=null) {
 			but=b.GetUniformTraverser();
-			flare=transform.FindChild("Flare");
-			flare2=transform.FindChild("Flare2");
-			flare3=transform.FindChild("Flare3");
+			flare=transform.Find("Flare");
+			flare2=transform.Find("Flare2");
+			flare3=transform.Find("Flare3");
 		}
 	}
 	

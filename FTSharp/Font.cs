@@ -13,7 +13,7 @@ namespace FTSharp
 
     public enum VerticalJustification
     {
-       Origin, Top, Bottom, Center
+        Origin, Top, Bottom, Center
     }
 
     public unsafe class Font : IDisposable
@@ -32,17 +32,17 @@ namespace FTSharp
 
         int point_size_ = 12; // 1pt = 1/72th of a inch
         int resolution_ = 100; // DPI
-        int  dpi_=72;
+        uint dpi_ = 72;
         float height_;  // default distance between 2 lines
 
         // Scaling vector
         float vectorScale_; // (point_size * resolution)/ (72 * face->units_per_em)
 
 
-        public Font(string path, float height, int dpi)
+        public Font(string path, float height, uint dpi)
         {
             lib = FTLibrary.Instance;
-            dpi_=dpi;
+            dpi_ = dpi;
 
             int code = FT.FT_New_Face(lib.Handle, path, 0, out face_);
             FT.CheckError(code);
@@ -55,10 +55,10 @@ namespace FTSharp
             face_has_kerning_ = ((facerec.face_flags & FT.FT_FACE_FLAG_KERNING) != 0);
             face_units_per_EM_ = facerec.units_per_EM;
             face_height_ = facerec.height;
-            
+
             //Console.WriteLine("new FONT = unit-per-em=" + face_units_per_EM_);
             //setCharSize(pointsize);
-            
+
             setCharHeight(height);
         }
 
@@ -81,7 +81,7 @@ namespace FTSharp
 
             if (disposing)
             { // dispose managed ressources
-                
+
             }
 
             // dispose unmanaged resources here
@@ -134,16 +134,16 @@ namespace FTSharp
             set { setCharHeight(value); }
         }
 
-        
-        
+
+
         // for vector outline rendering
         void setCharHeight(float height)
         {
-            int code = FT.FT_Set_Char_Size(face_, 0, face_units_per_EM_ * 64, dpi_, dpi_);
+            int code = FT.FT_Set_Char_Size(face_, 0, face_units_per_EM_ * 64, (uint)dpi_, (uint)dpi_);
             FT.CheckError(code);
 
             height_ = height;
-            vectorScale_ = (height_ *100)/ (dpi_*face_height_);
+            vectorScale_ = (height_ * 100) / (dpi_ * face_height_);
             //vectorScale_ = (height_ *100)/ (dpi_*face_height_);
         }
 
@@ -155,8 +155,8 @@ namespace FTSharp
             resolution_ = 100;
 
             //int code = FT.FT_Set_Char_Size(face_, 0, face_units_per_EM_ * 64, 72, 72);
-            
-            int code = FT.FT_Set_Char_Size(face_, 0, pointsize, dpi_, dpi_);
+
+            int code = FT.FT_Set_Char_Size(face_, 0, pointsize, (uint)dpi_, (uint)dpi_);
             FT.CheckError(code);
 
 
@@ -171,7 +171,7 @@ namespace FTSharp
         // if flatten is true convert curve into a list of segments
         // out parameter advance is set to the default glyph advancement
         // if embold <> 0, embold the outline by the desired strength
-        public Outline GetGlyphOutline(int idx, out Outline.Point advance, bool flatten, float embold, int isteps)
+        public Outline GetGlyphOutline(uint idx, out Outline.Point advance, bool flatten, float embold, int isteps)
         {
 
             // TODO: add outline caching ?
@@ -192,35 +192,36 @@ namespace FTSharp
 
             FT.FT_GlyphSlotRec slotrec = FT.HandleToRecord<FT.FT_GlyphSlotRec>(slot);
 
-            if (slotrec.format != FT.GLYPH_FORMAT_OUTLINE) {
+            if (slotrec.format != FT.GLYPH_FORMAT_OUTLINE)
+            {
                 throw new FTError(string.Format("Bad glyph format (0x{0:x4})", slotrec.format));
                 //throw new FTError("Bad glyph format (" + slotrec.format + ")");
             }
-            
+
             // Get glyph outline in gptr
             IntPtr gptr;
-            code = FT.FT_Get_Glyph(slot, out gptr);
+            code = FT.FT_Get_Glyph(slotrec, out gptr);
             FT.CheckError(code);
 
-            
+
             // Embold outline
             if (embold != 0)
             {
-               // Console.WriteLine("EMBOLD=" + embold);
-                IntPtr optr = FT.fthelper_glyph_get_outline_address(gptr);
-                FT.FT_Outline_Embolden(optr, (int) (embold * 64 * 100)); // convert to 26.6 fractional format 
+                // Console.WriteLine("EMBOLD=" + embold);
+                // IntPtr optr = FT.fthelper_glyph_get_outline_address(slot);
+                FT.FT_Outline_Embolden(slotrec.outline, (int)(embold * 64 * 100)); // convert to 26.6 fractional format 
             }
-            
+
             // Decompose outline
             Outline outline = null;
 
             if (flatten)
             {
-                outline = Outline.FlattenGlyph(gptr, vectorScale_,isteps);
+                outline = Outline.FlattenGlyph(slotrec, vectorScale_, isteps);
             }
             else
             {
-                outline = Outline.DecomposeGlyph(gptr, vectorScale_,isteps);
+                outline = Outline.DecomposeGlyph(slotrec, vectorScale_, isteps);
             }
 
             FT.FT_Done_Glyph(gptr);
@@ -231,21 +232,21 @@ namespace FTSharp
         }
         public Outline GetGlyphOutline(char c, out Outline.Point advance, bool flatten, float embold, int isteps)
         {
-            int idx = FT.FT_Get_Char_Index(face_, c);
+            uint idx = (uint)FT.FT_Get_Char_Index(face_, c);
             return GetGlyphOutline(idx, out advance, flatten, embold, isteps);
         }
 
         public Outline GetGlyphOutline(char c, out Outline.Point advance, bool flatten, int isteps)
         {
-            int idx = FT.FT_Get_Char_Index(face_, c);
-            return GetGlyphOutline(idx, out advance, flatten,0,isteps);
+            uint idx = (uint)FT.FT_Get_Char_Index(face_, c);
+            return GetGlyphOutline(idx, out advance, flatten, 0, isteps);
         }
 
 
         public Outline GetGlyphOutline(char c, out Outline.Point advance, bool flatten)
         {
-            int idx = FT.FT_Get_Char_Index(face_, c);
-            return GetGlyphOutline(idx, out advance, flatten,0,4);
+            uint idx = (uint)FT.FT_Get_Char_Index(face_, c);
+            return GetGlyphOutline(idx, out advance, flatten, 0, 4);
         }
 
 
@@ -262,7 +263,8 @@ namespace FTSharp
             return GetGlyphOutline(c, out advance, true);
         }
 
-        public Outline GetGlyphOutline(char c, bool flatten) {
+        public Outline GetGlyphOutline(char c, bool flatten)
+        {
             Outline.Point adv;
             return GetGlyphOutline(c, out adv, flatten);
         }
@@ -275,7 +277,7 @@ namespace FTSharp
         }
 
 
-        public Outline.Point GetKerning(int left, int right)
+        public Outline.Point GetKerning(uint left, uint right)
         {
             FT.FT_Vector delta = new FT.FT_Vector();
             FT.FT_Get_Kerning(face_, left, right, FT.FT_KERNING_UNFITTED, out delta);
@@ -288,7 +290,7 @@ namespace FTSharp
 
             Outline res = new Outline();
 
-           // first set pen position according to requested text justification
+            // first set pen position according to requested text justification
 
             if (h != HorizontalJustification.Origin || v != VerticalJustification.Origin)
             {
@@ -311,42 +313,42 @@ namespace FTSharp
                 switch (v)
                 {
                     case VerticalJustification.Top:
-                        position.Y = position.Y -bbox.yMax;
+                        position.Y = position.Y - bbox.yMax;
                         break;
                     case VerticalJustification.Bottom:
-                        position.Y = position.Y -bbox.yMin;
+                        position.Y = position.Y - bbox.yMin;
                         break;
                     case VerticalJustification.Center:
-                        position.Y = position.Y -(bbox.yMin + bbox.yMax) / 2;
+                        position.Y = position.Y - (bbox.yMin + bbox.yMax) / 2;
                         break;
                 }
             }
 
-           // Console.WriteLine("Original pen position=" + position);
+            // Console.WriteLine("Original pen position=" + position);
 
-            if (! HasKerning) { useKerning = false; }
+            if (!HasKerning) { useKerning = false; }
 
-            int prev = 0;
+            uint prev = 0;
 
             for (int i = 0; i < txt.Length; ++i)
             {
 
-                int idx = FT.FT_Get_Char_Index(face_, txt[i]);
+                uint idx = (uint)FT.FT_Get_Char_Index(face_, txt[i]);
 
                 if (useKerning && prev != 0 && idx != 0) // adjust with kerning properties
-                {                
-                    position.Translate(GetKerning(prev, idx));
+                {
+                    position.Translate(GetKerning((uint)prev, idx));
                 }
 
                 Outline.Point adv;
-                Outline o = GetGlyphOutline(idx, out adv, true, emboldStrenght,isteps);
-                
+                Outline o = GetGlyphOutline(idx, out adv, true, emboldStrenght, isteps);
+
                 o.Translate(position);
                 res.AddOutline(o);
 
                 adv.Scale(spacing);
                 position.Translate(adv);
-                
+
                 prev = idx;
             }
 
@@ -367,14 +369,14 @@ namespace FTSharp
 
         public Outline GetStringOutline(string txt, ref Outline.Point position, bool useKerning, float spacing, float emboldStrenght)
         {
-            return GetStringOutline(txt, ref position, HorizontalJustification.Origin, VerticalJustification.Origin, useKerning, spacing, emboldStrenght,4);
+            return GetStringOutline(txt, ref position, HorizontalJustification.Origin, VerticalJustification.Origin, useKerning, spacing, emboldStrenght, 4);
         }
 
         public Outline GetStringOutline(string txt, ref Outline.Point position, float spacing, float emboldStrenght)
         {
-            return GetStringOutline(txt, ref position, HorizontalJustification.Origin, VerticalJustification.Origin, false, spacing, emboldStrenght,4);
+            return GetStringOutline(txt, ref position, HorizontalJustification.Origin, VerticalJustification.Origin, false, spacing, emboldStrenght, 4);
         }
-        
+
         public Outline GetStringOutline(string txt, bool useKerning, float spacing, float emboldStrenght)
         {
             Outline.Point adv = new Outline.Point();
@@ -389,7 +391,7 @@ namespace FTSharp
 
         public Outline GetStringOutline(string txt, ref Outline.Point position, HorizontalJustification h, VerticalJustification v, bool useKerning, float spacing)
         {
-            return GetStringOutline(txt, ref position, h, v, useKerning, spacing, 0,4);
+            return GetStringOutline(txt, ref position, h, v, useKerning, spacing, 0, 4);
         }
 
         public Outline GetStringOutline(string txt, ref Outline.Point position, HorizontalJustification h, VerticalJustification v, bool useKerning)
@@ -405,7 +407,7 @@ namespace FTSharp
         public Outline GetStringOutline(string txt, HorizontalJustification h, VerticalJustification v, bool useKerning, float hspacing, float embold)
         {
             Outline.Point adv = new Outline.Point();
-            return GetStringOutline(txt, ref adv, h, v, useKerning, hspacing, embold,4);
+            return GetStringOutline(txt, ref adv, h, v, useKerning, hspacing, embold, 4);
         }
 
         public Outline GetStringOutline(string txt, HorizontalJustification h, VerticalJustification v, bool useKerning, float hspacing)
@@ -434,8 +436,9 @@ namespace FTSharp
         }
 
 
-        public Outline GetTextOutline(string[] lines, ref Outline.Point position, HorizontalJustification h, VerticalJustification v, bool useKerning, float interline) {
-            
+        public Outline GetTextOutline(string[] lines, ref Outline.Point position, HorizontalJustification h, VerticalJustification v, bool useKerning, float interline)
+        {
+
             //int nblines = lines.Length;
 
             // total cbox
@@ -460,7 +463,7 @@ namespace FTSharp
 
             Outline outline = new Outline();
             Outline.Point pos = new Outline.Point();
-            
+
             foreach (string line in lines)
             {
 
@@ -485,10 +488,10 @@ namespace FTSharp
         {
 
             // load glyph for c in face slot
-            int code = FT.FT_Load_Char(face_, (uint)c, (int)(FT.FT_LOAD_DEFAULT|( 1 << 3 ))); // FT_LOAD_DEFAULT, FT_LOAD_NO_BITMAP, FT_LOAD_NO_SCALE ?
+            int code = FT.FT_Load_Char(face_, (uint)c, (int)(FT.FT_LOAD_DEFAULT | (1 << 3))); // FT_LOAD_DEFAULT, FT_LOAD_NO_BITMAP, FT_LOAD_NO_SCALE ?
             FT.CheckError(code);
 
-            
+
             // Check that the glyph is in Outline format
 
             FT.FT_FaceRec facerec = FT.HandleToRecord<FT.FT_FaceRec>(face_);
@@ -505,7 +508,7 @@ namespace FTSharp
 
             // get glyph in gptr
             IntPtr gptr;
-            code = FT.FT_Get_Glyph(slot, out gptr);
+            code = FT.FT_Get_Glyph(slotrec, out gptr);
             FT.CheckError(code);
 
             FT.FT_BBox ft_bbox;
@@ -530,7 +533,7 @@ namespace FTSharp
             {
                 Outline.Point cadv;
                 BBox cbbox = Measure(c, out cadv);
-                
+
                 // translate char bbox to total advancement so far
                 cbbox.Translate(advance);
 
@@ -547,7 +550,7 @@ namespace FTSharp
         public BBox Measure(string[] lines, float interline)
         {
             Outline.Point position = new Outline.Point(); // start at 0,0
-            Outline.Point lineTransition = new Outline.Point(0, - Height * interline);
+            Outline.Point lineTransition = new Outline.Point(0, -Height * interline);
 
             BBox bbox = new BBox();
 
@@ -564,7 +567,7 @@ namespace FTSharp
 
 
         //public delegate void DrawBitmapF(Bitmap bitmap, int posx, int posy);
-		public delegate void DrawBitmapF(FT.FT_Bitmap bitmap, int posx, int posy);
+        public delegate void DrawBitmapF(FT.FT_Bitmap bitmap, int posx, int posy);
 
         public void RenderText(string text, DrawBitmapF drawBitmap, int penx, int peny)
         {
@@ -572,7 +575,7 @@ namespace FTSharp
 
             FT.FT_FaceRec facerec = FT.HandleToRecord<FT.FT_FaceRec>(face_);
             IntPtr slot = facerec.glyph;
-            
+
             foreach (char c in text)
             {
                 code = FT.FT_Load_Char(face_, c, FT.FT_LOAD_RENDER/*|FT.FT_LOAD_TARGET_NORMAL*/);
@@ -580,16 +583,16 @@ namespace FTSharp
 
                 FT.FT_GlyphSlotRec slotrec = FT.HandleToRecord<FT.FT_GlyphSlotRec>(slot);
                 //Bitmap bitmap = new Bitmap(slotrec.bitmap);
-				
-//                drawBitmap(bitmap, penx + slotrec.bitmap_left, peny + slotrec.bitmap_top);
+
+                //                drawBitmap(bitmap, penx + slotrec.bitmap_left, peny + slotrec.bitmap_top);
                 //drawBitmap(bitmap, penx + slotrec.bitmap_left, peny - slotrec.bitmap_top);
-				drawBitmap(slotrec.bitmap, penx + slotrec.bitmap_left, peny - slotrec.bitmap_top);
+                drawBitmap(slotrec.bitmap, penx + slotrec.bitmap_left, peny - slotrec.bitmap_top);
                 penx += (slotrec.advance.x >> 6);
             }
         }
-        
-        
-	public unsafe UnityEngine.Texture2D RenderIntoTexture(char c) {
+
+
+        public unsafe UnityEngine.Texture2D RenderIntoTexture(char c) {
             int code;
 	    
             FT.FT_FaceRec facerec = FT.HandleToRecord<FT.FT_FaceRec>(face_);
@@ -601,7 +604,7 @@ namespace FTSharp
             FT.FT_GlyphSlotRec slotrec = FT.HandleToRecord<FT.FT_GlyphSlotRec>(slot);
             FTSharp.FT.FT_Bitmap  ftbm=slotrec.bitmap;    
             
-	    UnityEngine.Texture2D texbuffer=new UnityEngine.Texture2D(ftbm.width,ftbm.rows,UnityEngine.TextureFormat.ARGB32,false);
+	    UnityEngine.Texture2D texbuffer=new UnityEngine.Texture2D((int)ftbm.width, (int)ftbm.rows,UnityEngine.TextureFormat.ARGB32,false);
 	    if (((int)ftbm.pixel_mode)!=2) {
 			UnityEngine.Debug.LogError("Unsupported bitmap depth :"+((int)ftbm.pixel_mode).ToString());
 			return null;
@@ -617,7 +620,7 @@ namespace FTSharp
 		
 	  // UNSAFE DOES NOT WORK IN THE WEB PLAYER !
 	    for (int y=0;y<ftbm.rows;y++) {		      
-			int j=(((ftbm.rows-(1+y))*ftbm.pitch));
+			long j=(((ftbm.rows-(1+y))*ftbm.pitch));
 			byte * bo=((byte *)ftbm.buffer);
 			for (int x=0;x<ftbm.width;x++) {
 			  clrs[i].a=clrs[i].r=clrs[i].g=clrs[i].b=(bo[j+x]);
@@ -628,7 +631,6 @@ namespace FTSharp
 	    texbuffer.Apply();
 	    return texbuffer;
 	}
-			
 
     }
 }

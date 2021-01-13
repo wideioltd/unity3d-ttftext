@@ -227,7 +227,7 @@ namespace FTSharp
 
         static OutlineDecomposer odecomposer;
 
-        public static Outline DecomposeGlyph(IntPtr glyph, float scale, int isteps)
+        public static Outline DecomposeGlyph(FT.FT_GlyphSlotRec slot, float scale, int isteps)
         {
             Outline outline = new Outline(isteps);
 
@@ -245,13 +245,13 @@ namespace FTSharp
                 odecomposer.ConicToEv = outline.ConicTo;
                 odecomposer.CubicToEv = outline.CubicTo;
 
-                odecomposer.Decompose(glyph);
+                odecomposer.Decompose(slot);
             }
 
             return outline;
         }
 
-        public static Outline FlattenGlyph(IntPtr glyph, float scale, int isteps)
+        public static Outline FlattenGlyph(FT.FT_GlyphSlotRec slot, float scale, int isteps)
         {
             Outline outline = new Outline(isteps);
 
@@ -270,7 +270,7 @@ namespace FTSharp
                 odecomposer.ConicToEv = outline.FlattenConicTo;
                 odecomposer.CubicToEv = outline.FlattenCubicTo;
 
-                odecomposer.Decompose(glyph);
+                odecomposer.Decompose(slot);
             }
 
 
